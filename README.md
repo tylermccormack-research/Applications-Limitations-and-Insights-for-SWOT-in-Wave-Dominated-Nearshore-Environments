@@ -10,3 +10,5 @@ Here is a general overview of how to replicate this analysis:
 4. Analyze and visualize SWOT vs in-situ SWH and WSE separately. Code is available in folder "Main Analysis"
 5. Conduct feature important analysis on which factors are most correlated with SWOT vs in-situ WSE and SWH comparison error. Codes for this are in folder "Feature Importance"
 6. Helper functions to run these codes are in folder "Helper Functions"
+  - m_map is not included in the Helper Function folder but is available here: https://www.eoas.ubc.ca/~rich/map.html
+    
