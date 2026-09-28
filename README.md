@@ -1,14 +1,229 @@
-This repository contains MATLAB files to preprocess, analyze, and visualize comparisons between SWOT water surface elevation (WSE) and significant wave height (SWH) and in-situ measurements collected at the Army Corps of Engineers Field Research Facility in Duck, NC
+# Applications, Limitations, and Insights for SWOT in Wave-Dominated Nearshore Environments
 
-Here is a general overview of how to replicate this analysis:
-1. Download the SWOT data locally. L2 products can be found here https://podaac.jpl.nasa.gov/SWOT?sections=data and the L3 product can be found here https://www.aviso.altimetry.fr/en/data.html
-   *Note: Downloading the files locally is not the recommended way to handle SWOT data, streaming the data from the cloud is the preferred method. Information on this can be found here: https://podaac.github.io/tutorials/notebooks/datasets/DirectCloud_Access_SWOT_Oceanography.html
-2. Retrieve in-situ data from chldata.erdc.dren.mil
-* For the data that can be retrieved programmatically, the codes are provided in folder "In-situ Data Retrieval and processing"
-* The in-situ data preprocessing happens inside these codes
-3. Preprocess SWOT data. Codes are available in folder "SWOT Data Preprocessing"
-4. Analyze and visualize SWOT vs in-situ SWH and WSE separately. Code is available in folder "Main Analysis"
-5. Conduct feature important analysis on which factors are most correlated with SWOT vs in-situ WSE and SWH comparison error. Codes for this are in folder "Feature Importance"
-6. Helper functions to run these codes are in folder "Helper Functions"
-  - m_map is not included in the Helper Function folder but is available here: https://www.eoas.ubc.ca/~rich/map.html
-    
+This repository contains MATLAB code to preprocess, analyze, and visualize comparisons between SWOT water surface elevation (WSE) and significant wave height (SWH) and in-situ measurements collected at the U.S. Army Corps of Engineers Field Research Facility (FRF) in Duck, NC.
+
+## Repository workflow
+
+The analysis is organized as a dependency chain:
+
+```
+Raw SWOT data + FRF in-situ data
+            |
+            v
+  In-situ Data Retrieval
+            |
+            v
+  SWOT Data Preprocessing
+            |
+            v
+   Intermediate .mat files
+            |
+            +-----------------------------+
+            |                             |
+            v                             v
+     Main Analysis                   Feature Importance
+       SWH / WSE
+```
+
+The folders are intended to be used in approximately this order:
+
+1. **In-situ Data Retrieval** — retrieve and preprocess the FRF wave, current, wind, water-level, and water-depth observations needed by the analysis.
+2. **SWOT Data Preprocessing** — process the SWOT L2/L3 products, filter the FRF region, attach the relevant geometry and quality information, and generate the intermediate MATLAB `.mat` products used by the analysis scripts.
+3. **Main Analysis** — run the four publication-analysis scripts. These produce the primary SWH and WSE comparison figures and sensitivity analysis.
+4. **Feature Importance** — use the SWH comparison results to investigate which wave, environmental, geometric, and SWOT-related factors are associated with SWH comparison error.
+5. **Helper Functions** — functions called by the retrieval, preprocessing, and analysis scripts.
+
+## Execution chain
+
+### 1. Download the SWOT data
+
+SWOT L2 products are available through [PO.DAAC](https://podaac.jpl.nasa.gov/SWOT?sections=data), and L3 products are available through [AVISO](https://www.aviso.altimetry.fr/en/data.html).
+
+Downloading complete SWOT archives locally is not required and is generally not the preferred approach. SWOT data can be accessed directly from the cloud. See the [PO.DAAC direct cloud access tutorial](https://podaac.github.io/tutorials/notebooks/datasets/DirectCloud_Access_SWOT_Oceanography.html).
+
+The preprocessing scripts currently use local paths, so update the paths at the beginning of `SWOT Data Preprocessing/processSWOT.m` and the relevant processing functions for your local data layout.
+
+### 2. Retrieve and preprocess the FRF in-situ data
+
+The scripts in **In-situ Data Retrieval** retrieve the measurements used throughout the analysis. The principal retrieval scripts include:
+
+- `pullDownAllFrfWaveHeights.m`
+- `pullDownAllFrfWavePeriods.m`
+- `pullDownAllFrfMeanWaveDirection.m`
+- `pullDownAllFrfWavePeakDirection.m`
+- `pullDownAllFrfCurrentSpeed.m`
+- `pullDownAllFrfCurrentDirection.m`
+- `pullDownAllFrfWindSpeed.m`
+- `pullDownAllFrfWindDirection.m`
+- `pullDownAllWaveGaugeWaterDepths.m`
+
+Additional retrieval scripts are provided for current profiles, pressure, pier water levels, and related measurements.
+
+These scripts use the FRF's ERDC/CHL data services and save the processed measurements that are subsequently loaded by the analysis scripts.
+
+### 3. Preprocess the SWOT products
+
+The main preprocessing driver is:
+
+```
+SWOT Data Preprocessing/processSWOT.m
+```
+
+This script runs the current processing branches used in the paper:
+
+- **L3 LR SSH Expert, 2 km**
+  - `processSWOT250_L3_LR_SSH_expert_func.m`
+- **L2 LR SSH Expert, 250 m product**
+  - `processSWOT250_L2_LR_SSH_expert_func.m`
+- **HR 100 m raster**
+  - `processSWOT100HRfunc.m`
+- **HR PIXC**
+  - `processSWOTpixelCloudHRfunc_bigArea.m`
+- **L3 LR SSH unsmoothed/current analysis**
+  - `processSWOT_L3_unsmoothed.m`
+
+The processing functions depend on the helper functions in **Helper Functions**, including FRF coordinate conversion, FRF-region filtering, quality-flag filtering, and removal of empty structure fields.
+
+Running `processSWOT.m` generates the time-series and processed SWOT products required by the WSE analysis, including products such as:
+
+- `convertedTimeArray_L3_LR_SSH_2km.mat`
+- `extractedSSH_L3_LR_SSH_2km.mat`
+- `convertedTimeArray_250m_LR_L2_SSH_Expert.mat`
+- `extractedSSH_250m_LR_L2_SSH_Expert.mat`
+- `convertedTimeArray_100HR.mat`
+- `extractedSWE_100HR.mat`
+- `convertedTimeArray_pixelCloudHR_bigArea.mat`
+- `extractedSWE_pixelCloudHR_bigArea.mat`
+
+The preprocessing functions also produce the processed `dataStruct` products used directly by the SWH and WSE analyses.
+
+### 4. Run the main WSE analysis
+
+The WSE analysis scripts are in:
+
+```
+Main Analysis/WSE/
+```
+
+Run:
+
+```
+hrAverageRegionSenstiviity.m
+```
+
+to investigate the sensitivity of the HR WSE comparison to the averaging region.
+
+Then run:
+
+```
+wsePaperFigure_HRaveraged.m
+```
+
+to generate the primary WSE comparison figure across the L3 LR, L2 LR, HR raster, and HR PIXC products.
+
+These scripts require the processed SWOT products from Step 3, FRF water-level observations, and the associated in-situ/environmental `.mat` files.
+
+### 5. Run the main SWH analysis
+
+The SWH analysis scripts are in:
+
+```
+Main Analysis/SWH/
+```
+
+Run:
+
+```
+swhPaperFigure_new.m
+```
+
+to generate the primary SWOT-vs-in-situ SWH comparison and comparison-location figure.
+
+The script uses the processed L2 LR SWOT product together with the FRF wave, current, wind, water-depth, tide, and pass-matching data.
+
+Then run:
+
+```
+swhPaperFigure_shoaled.m
+```
+
+to generate the corresponding analysis including the linear wave-shoaling calculation.
+
+The helper functions used specifically by the shoaling analysis are defined internally within `swhPaperFigure_shoaled.m`; they do not need separate files.
+
+The SWH analysis also uses the plotting helper:
+
+```
+Helper Functions/plotFRFinstruments_instrumentsOnly_4SWOT_compare_locations.m
+```
+
+### 6. Feature-importance analysis
+
+After the SWH comparison analysis has produced the data required by the feature-importance workflow, run:
+
+```
+Feature Importance/swhFeatureImportance_newDistToCoast.m
+```
+
+This script evaluates relationships between SWH comparison error and factors including distance to the in-situ instrument, distance to coast, water depth, wave height, wave period, wavelength, wave direction, currents, wind, and SWOT product/version information.
+
+The feature-importance script requires the analysis dataset `swhAccuracyAnalysis.mat` as well as the processed L2 LR SWOT and in-situ data used to construct the predictors.
+
+## Required intermediate data
+
+The analysis scripts load a number of `.mat` files rather than downloading or generating all of them automatically. Examples include:
+
+- `250m_LR_L2_SSH_expert_Processed.mat`
+- `2km_LR_L3_SSH_expert_Processed.mat`
+- `100m_Processed.mat`
+- `pixelCloud_Processed_bigArea.mat`
+- `convertedTimeArray_250m_LR_L2_SSH_Expert.mat`
+- `extractedSSH_250m_LR_L2_SSH_Expert.mat`
+- `convertedTimeArray_100HR.mat`
+- `extractedSWE_100HR.mat`
+- `convertedTimeArray_pixelCloudHR_bigArea.mat`
+- `extractedSWE_pixelCloudHR_bigArea.mat`
+- `insituSWH_relevantInstrumentsAllProducts.mat`
+- `insituTp_relevantInstrumentsAllProducts.mat`
+- `insituWavePeakDir_relevantInstrumentsAllProducts.mat`
+- `insituWaveMeanDir_relevantInstrumentsAllProducts.mat`
+- `insituCurrentSpeeds_relevantInstrumentsAllProducts.mat`
+- `insituCurrentDirection_relevantInstrumentsAllProducts.mat`
+- `insituWindSpeeds_relevantInstrumentsAllProducts.mat`
+- `insituWindDirection_relevantInstrumentsAllProducts.mat`
+- `waterDepth_relevantInstrumentsAllProducts.mat`
+- `noaaTideData_all_navd88.mat`
+- `passMatchLogical.mat`
+- `demVariables.mat`
+
+These files can be generated from the retrieval/preprocessing workflow or supplied as intermediate analysis products, depending on the particular analysis.
+
+## External MATLAB dependencies
+
+The repository uses the **M_Map** MATLAB mapping toolbox for some geographic plotting functions. M_Map is not included in this repository and can be obtained from:
+
+https://www.eoas.ubc.ca/~rich/map.html
+
+The analysis also uses standard MATLAB functionality and, where applicable, MATLAB toolbox functions such as `rmse` and Statistics and Machine Learning Toolbox functionality used by the feature-importance analysis.
+
+## Repository structure
+
+```
+Feature Importance/
+    SWH feature-importance analysis
+
+Helper Functions/
+    Shared MATLAB helper functions
+
+In-situ Data Retrieval/
+    FRF data retrieval and preprocessing
+
+Main Analysis/
+    SWH/
+        Primary SWH comparison analyses
+    WSE/
+        Primary WSE comparison and sensitivity analyses
+
+SWOT Data Preprocessing/
+    SWOT L2/L3 preprocessing and intermediate-product generation
+```
