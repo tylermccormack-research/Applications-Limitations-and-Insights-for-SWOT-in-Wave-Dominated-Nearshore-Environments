@@ -1,0 +1,118 @@
+%% Pull down wave hourly average wave heights from all relevant insitu sensors
+% Load all SWOT structures
+load('2km_LR_L3_SSH_expert_Processed.mat');          % LR 250m
+L3_2km = dataStruct;
+load('250m_LR_L2_SSH_expert_Processed.mat'); % LR 2km
+LR2km = dataStruct;
+load('100m_Processed.mat');                  % HR 100m
+HR100m = dataStruct;
+load('pixelCloud_Processed_bigArea.mat');            % HR Pixel cloud
+HRpixc = dataStruct;
+
+allStructs = {L3_2km, LR2km, HR100m, HRpixc};
+structNames = {'L3_2km', 'LR2km', 'HR100m', 'HRpixc'};
+
+%% === Step 1: Gather and round all SWOT times
+allTimes = [];
+for s = 1:numel(allStructs)
+    fn = fieldnames(allStructs{s});
+    tmpTimes = NaT(numel(fn),1);
+    for t = 1:numel(fn)
+        meanTime = mean(allStructs{s}.(fn{t}).time);
+        tmpTimes(t) = datetime(meanTime, 'ConvertFrom', 'epochtime', 'Epoch', '2000-01-01');
+    end
+    allTimes = [allTimes; tmpTimes];
+end
+
+% Round to nearest minute (adjust tolerance here)
+roundedTimes = dateshift(allTimes, 'start', 'minute');
+uniqueTimes = unique(roundedTimes);
+
+fprintf('→ Found %d unique rounded SWOT overpass times across all datasets.\n', numel(uniqueTimes));
+
+%% === Step 2: Parallel retrieval across instruments
+% --- CHECK FOR SAVED LOOKUP FIRST ---
+loadedOK = false;
+
+if isfile('D:\SWOT\Analysis\Wave height estimation\waveVariables\Lookup\windDirectionLookup.mat')
+    try
+        load('D:\SWOT\Analysis\Wave height estimation\waveVariables\Lookup\windDirectionLookup.mat', 'windDirectionLookup');
+        fprintf('✓ Loaded windDirectionLookup.mat — skipping Wind Direction retrieval.\n');
+        loadedOK = true;
+    catch
+        warning('⚠ Failed to load windDirectionLookup.mat. Recomputing lookup...');
+        loadedOK = false;
+    end
+end
+
+% Pick your variable (only most relevant listed here)
+      % windDirection
+      % windSpeed
+
+variable='windDirection';
+
+if ~loadedOK
+
+
+% Initialize lookup table with NaNs
+windDirectionLookup = NaN(numel(uniqueTimes), 1);
+
+fprintf('→ Starting retrieval of Wind for %d times...\n',  numel(uniqueTimes));
+
+for t = 1:numel(uniqueTimes)
+    thisTime = uniqueTimes(t);
+    try
+        localData(t) = getFrfWindData_universal(thisTime, variable);
+    catch ME
+        fprintf('Error at time %d: %s\n', t, ME.message);
+        localData(t) = NaN;
+    end
+end
+
+% Store back into lookup after parallel section
+instrumentResults = double(localData);
+
+for t = 1:numel(uniqueTimes)
+    windDirectionLookup(t) = instrumentResults(t);
+end
+
+fprintf('✓ Parallel Wind Speed retrieval complete.\n');
+    save('D:\SWOT\Analysis\Wave height estimation\waveVariables\Lookup\windDirectionLookup.mat', 'windDirectionLookup');
+    fprintf('✓ Saved windDirectionLookup.mat\n');
+end
+
+%% === Step 3: Assign to each SWOT structure
+for s = 1:numel(allStructs)
+    dataStruct = allStructs{s};
+    fn = fieldnames(dataStruct);
+    nT = numel(fn);
+    timeVec = NaT(nT,1);
+
+    % Preallocate consistent struct array
+    instrumentWindDirection_byTime = repmat( NaN, nT, 1);
+
+    for t = 1:nT
+        meanTime = mean(dataStruct.(fn{t}).time);
+        thisTime = datetime(meanTime, 'ConvertFrom', 'epochtime', 'Epoch', '2000-01-01');
+        timeVec(t) = thisTime;
+
+        % Find closest rounded cluster (tolerance ±30 minutes)
+        roundedTime = dateshift(thisTime, 'start', 'minute');
+        [dt, idx] = min(abs(uniqueTimes - roundedTime));
+
+        if ~isempty(idx) && minutes(dt) < 30
+            % Assign all fields directly
+                instrumentWindDirection_byTime(t) = windDirectionLookup(idx);
+            
+        end
+    end
+
+    % Push results to base workspace
+    assignin('base', ['instrumentWindDirection_byTime_' structNames{s}], instrumentWindDirection_byTime);
+    assignin('base', ['timeVec_' structNames{s}], timeVec);
+
+    fprintf('✓ Assigned %d matched entries for %s.\n', nT, structNames{s});
+end
+
+%% Save full output
+save('D:\SWOT\Analysis\Wave height estimation\waveVariables\Wind\insituWindDirection_relevantInstrumentsAllProducts.mat',"instrumentWindDirection_byTime_L3_2km", "instrumentWindDirection_byTime_LR2km", "instrumentWindDirection_byTime_HR100m", "instrumentWindDirection_byTime_HRpixc")
