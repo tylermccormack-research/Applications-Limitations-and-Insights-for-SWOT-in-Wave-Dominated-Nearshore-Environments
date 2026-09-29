@@ -1,3 +1,5 @@
+paths = setupPaths();
+
 station=8651370;
 dateStart=datenum('01-Aug-2023');
 dateEnd=datenum('31-Dec-2025');
