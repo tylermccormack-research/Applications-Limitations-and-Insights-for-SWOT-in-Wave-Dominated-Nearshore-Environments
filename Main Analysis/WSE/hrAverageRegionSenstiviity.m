@@ -1,9 +1,11 @@
 %% Sensitivity Study for HR 100m & Pixel Cloud Averaging Radius
+paths = setupPaths();
+
 clear; clc; close all
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Load FRF NOAA water level data
-load('noaaTideData_all_navd88.mat');
+load(fullfile(paths.frf.waterLevel, 'noaaTideData_all_navd88.mat'));
 
 % NOAA gauge location
 noaaLat  = 36.183639;
@@ -12,16 +14,16 @@ noaaLong = -75.74528;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Load processed SWOT HR products
-load('100m_Processed.mat');          % HR 100m raster
+load(fullfile(paths.swot.hr100m, '100m_Processed.mat'));          % HR 100m raster
 HR100m = dataStruct;
-load('pixelCloud_Processed_bigArea.mat'); % Pixel cloud
+load(fullfile(paths.swot.pixc, 'pixelCloud_Processed_bigArea.mat')); % Pixel cloud
 HRpixc = dataStruct;
 clear dataStruct
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Matching times
-load('convertedTimeArray_100HR.mat');
-load('convertedTimeArray_pixelCloudHR_bigArea.mat');
+load(fullfile(paths.swot.hr100m, 'convertedTimeArray_100HR.mat'));
+load(fullfile(paths.swot.pixc, 'convertedTimeArray_pixelCloudHR_bigArea.mat'));
 
 % Find closest indices to NOAA gauge for each pass
 SmallArrays = {convertedTimeArray_100HR, convertedTimeArray_pixelCloudHR};
@@ -128,7 +130,7 @@ clear; clc; close all
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Load FRF NOAA water level data
-load('noaaTideData_all_navd88.mat');
+load(fullfile(paths.frf.waterLevel, 'noaaTideData_all_navd88.mat'));
 
 % NOAA gauge location
 noaaLat  = 36.183639;
@@ -137,16 +139,16 @@ noaaLong = -75.74528;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Load processed SWOT HR products
-load('100m_Processed.mat');          % HR 100m raster
+load(fullfile(paths.swot.hr100m, '100m_Processed.mat'));          % HR 100m raster
 HR100m = dataStruct;
-load('pixelCloud_Processed_bigArea.mat'); % Pixel cloud
+load(fullfile(paths.swot.pixc, 'pixelCloud_Processed_bigArea.mat')); % Pixel cloud
 HRpixc = dataStruct;
 clear dataStruct
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Matching times
-load('convertedTimeArray_100HR.mat');
-load('convertedTimeArray_pixelCloudHR_bigArea.mat');
+load(fullfile(paths.swot.hr100m, 'convertedTimeArray_100HR.mat'));
+load(fullfile(paths.swot.pixc, 'convertedTimeArray_pixelCloudHR_bigArea.mat'));
 
 % Find closest indices to NOAA gauge for each pass
 SmallArrays = {convertedTimeArray_100HR, convertedTimeArray_pixelCloudHR};
@@ -265,7 +267,7 @@ clear; clc; close all
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Load FRF NOAA water level data
-load('noaaTideData_all_navd88.mat');
+load(fullfile(paths.frf.waterLevel, 'noaaTideData_all_navd88.mat'));
 
 % NOAA gauge location
 noaaLat  = 36.183639;
@@ -274,16 +276,16 @@ noaaLong = -75.74528;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Load processed SWOT HR products
-load('100m_Processed.mat');          % HR 100m raster
+load(fullfile(paths.swot.hr100m, '100m_Processed.mat'));          % HR 100m raster
 HR100m = dataStruct;
-load('pixelCloud_Processed_bigArea.mat'); % Pixel cloud
+load(fullfile(paths.swot.pixc, 'pixelCloud_Processed_bigArea.mat')); % Pixel cloud
 HRpixc = dataStruct;
 clear dataStruct
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Matching times
-load('convertedTimeArray_100HR.mat');
-load('convertedTimeArray_pixelCloudHR_bigArea.mat');
+load(fullfile(paths.swot.hr100m, 'convertedTimeArray_100HR.mat'));
+load(fullfile(paths.swot.pixc, 'convertedTimeArray_pixelCloudHR_bigArea.mat'));
 
 % Find closest indices to NOAA gauge for each pass
 SmallArrays = {convertedTimeArray_100HR, convertedTimeArray_pixelCloudHR};
