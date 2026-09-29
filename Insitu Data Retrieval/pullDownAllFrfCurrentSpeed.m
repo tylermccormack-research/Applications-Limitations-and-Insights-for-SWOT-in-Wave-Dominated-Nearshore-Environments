@@ -36,9 +36,9 @@ fprintf('→ Found %d unique rounded SWOT overpass times across all datasets.\n'
 % --- CHECK FOR SAVED currentSpeedLookup FIRST ---
 loadedOK = false;
 
-if isfile('D:\SWOT\Analysis\Wave height estimation\waveVariables\Lookup\currentSpeedLookup.mat')
+if isfile(fullfile(paths.inSitu.lookup, 'currentSpeedLookup.mat'))
     try
-        load('D:\SWOT\Analysis\Wave height estimation\waveVariables\Lookup\currentSpeedLookup.mat', 'currentSpeedLookup');
+        load(fullfile(paths.inSitu.lookup, 'currentSpeedLookup.mat'), 'currentSpeedLookup');
         fprintf('✓ Loaded currentSpeedLookup.mat — skipping Current Speed retrieval.\n');
         loadedOK = true;
     catch
@@ -112,7 +112,7 @@ if ~loadedOK
     end
 
     fprintf('✓ Parallel Current speed retrieval complete.\n');
-    save('D:\SWOT\Analysis\Wave height estimation\waveVariables\Lookup\currentSpeedLookup.mat', 'currentSpeedLookup');
+    save(fullfile(paths.inSitu.lookup, 'currentSpeedLookup.mat'), 'currentSpeedLookup');
     fprintf('✓ Saved currentSpeedLookup.mat\n');
 end
 
@@ -158,4 +158,4 @@ instrumentCurrentSpeed_byTime_HR100m=struct2table(instrumentCurrentSpeed_byTime_
 instrumentCurrentSpeed_byTime_HRpixc=struct2table(instrumentCurrentSpeed_byTime_HRpixc);
 
 %% Save full output
-save('D:\SWOT\Analysis\Wave height estimation\waveVariables\Currents\insituCurrentSpeeds_relevantInstrumentsAllProducts.mat',"instrumentCurrentSpeed_byTime_L3_2km", "instrumentCurrentSpeed_byTime_LR2km", "instrumentCurrentSpeed_byTime_HR100m", "instrumentCurrentSpeed_byTime_HRpixc")
+save(fullfile(paths.inSitu.currents, 'insituCurrentSpeeds_relevantInstrumentsAllProducts.mat'),"instrumentCurrentSpeed_byTime_L3_2km", "instrumentCurrentSpeed_byTime_LR2km", "instrumentCurrentSpeed_byTime_HR100m", "instrumentCurrentSpeed_byTime_HRpixc")
