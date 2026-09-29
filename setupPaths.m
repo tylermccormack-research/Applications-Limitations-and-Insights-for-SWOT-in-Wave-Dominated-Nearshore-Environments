@@ -52,6 +52,7 @@ paths.inSitu.versions = fullfile(paths.waveVariables, 'Versions');
 repoRoot = fileparts(mfilename('fullpath'));
 paths.repoRoot = repoRoot;
 paths.static = fullfile(repoRoot, 'Helper Functions');
+paths.preprocessing = fullfile(repoRoot, 'SWOT Data Preprocessing');
 
 % Create output directories when needed by scripts that generate files.
 outputDirs = { ...
