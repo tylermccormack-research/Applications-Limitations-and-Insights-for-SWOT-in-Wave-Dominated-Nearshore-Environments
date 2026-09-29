@@ -36,9 +36,9 @@ fprintf('→ Found %d unique rounded SWOT overpass times across all datasets.\n'
 % --- CHECK FOR SAVED LOOKUP FIRST ---
 loadedOK = false;
 
-if isfile('D:\SWOT\Analysis\Wave height estimation\waveVariables\Lookup\SWH_lookup.mat')
+if isfile(fullfile(paths.inSitu.lookup, 'SWH_lookup.mat'))
     try
-        load('D:\SWOT\Analysis\Wave height estimation\waveVariables\Lookup\SWH_lookup.mat', 'SWH_lookup');
+        load(fullfile(paths.inSitu.lookup, 'SWH_lookup.mat'), 'SWH_lookup');
         fprintf('✓ Loaded SWH_lookup.mat — skipping SWH retrieval.\n');
         loadedOK = true;
     catch
@@ -104,7 +104,7 @@ if ~loadedOK
     end
 
     fprintf('✓ Parallel SWH retrieval complete.\n');
-    save('D:\SWOT\Analysis\Wave height estimation\waveVariables\Lookup\SWH_lookup.mat', 'SWH_lookup');
+    save(fullfile(paths.inSitu.lookup, 'SWH_lookup.mat'), 'SWH_lookup');
     fprintf('✓ Saved SWH_lookup.mat\n');
 end
 
@@ -161,11 +161,11 @@ instrumentSWH_byTime_HR100m=struct2table(instrumentSWH_byTime_HR100m);
 instrumentSWH_byTime_HRpixc=struct2table(instrumentSWH_byTime_HRpixc);
 
 %% Save full output
-save('D:\SWOT\Analysis\Wave height estimation\waveVariables\Hs\insituSWH_relevantInstrumentsAllProducts.mat',"instrumentSWH_byTime_L3_2km", "instrumentSWH_byTime_LR2km", "instrumentSWH_byTime_HR100m", "instrumentSWH_byTime_HRpixc")
+save(fullfile(paths.inSitu.hs, 'insituSWH_relevantInstrumentsAllProducts.mat'),"instrumentSWH_byTime_L3_2km", "instrumentSWH_byTime_LR2km", "instrumentSWH_byTime_HR100m", "instrumentSWH_byTime_HRpixc")
 
  %% Instrument Names
 % load('instrumentNames.mat');
 % instrumentNames(1:5)=[];
 % instrumentNamesSWH_new=instrumentNames;
-% save('D:\SWOT\Analysis\Wave height estimation\waveVariables\Hs\instrumentNamesSWH_new.mat',"instrumentNames")
+% save(fullfile(paths.inSitu.hs, 'instrumentNamesSWH_new.mat'),"instrumentNames")
 % 
