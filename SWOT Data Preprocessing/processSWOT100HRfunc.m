@@ -1,6 +1,6 @@
+function [dataStruct]=processSWOT100HRfunc(inputPath)
 paths = setupPaths();
 
-function [dataStruct]=processSWOT100HRfunc(inputPath)
     % processSWOTFiles Processes SWOT NetCDF files in the given directory
     % 
     % INPUT:
