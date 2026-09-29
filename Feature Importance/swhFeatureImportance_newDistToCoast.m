@@ -5,12 +5,14 @@
 %  - Part 1: All instruments together
 %  - Part 2: Separate RF per instrument
 % =========================================================
+paths = setupPaths();
+
 clear; clc;
 
 %% =========================================================
 %  Load pre-processed data
 % =========================================================
-load("swhAccuracyAnalysis.mat");   % should contain:
+load(fullfile(paths.paperSWH, 'swhAccuracyAnalysis.mat'));   % should contain:
 %   SWH_swot_all, instrumentNames, instrumentLabels, dist_all,
 %   instrumentSWH_byTime_LR2km, instrumentTp_byTime_LR2km,
 %   instrumentWavePeakDir_byTime_LR2km, instrumentWaveMeanDir_byTime_LR2km,
@@ -23,7 +25,7 @@ load("swhAccuracyAnalysis.mat");   % should contain:
 
 % Make sure LR2km is available (for FRF_X and SWH indices).
 if ~exist('LR2km','var')
-    load('250m_LR_L2_SSH_expert_Processed.mat'); % contains dataStruct
+    load(fullfile(paths.swot.l2LrExpert, '250m_LR_L2_SSH_expert_Processed.mat')); % contains dataStruct
     LR2km = dataStruct;
     clear dataStruct;
 end
