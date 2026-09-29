@@ -17,6 +17,6 @@ noaaTideData_all_navd88.time_dateTime=datetime(noaaTideData_all_navd88.t, "Conve
 
 %% Save
 
-save('D:\SWOT\Data\FRF Hydro data\WaterLevel\noaaTideData_all.mat',"noaaTideData_all")
+save(fullfile(paths.frf.waterLevel, 'noaaTideData_all.mat'),"noaaTideData_all")
 
-save('D:\SWOT\Data\FRF Hydro data\WaterLevel\noaaTideData_all_navd88.mat',"noaaTideData_all_navd88")
+save(fullfile(paths.frf.waterLevel, 'noaaTideData_all_navd88.mat'),"noaaTideData_all_navd88")
