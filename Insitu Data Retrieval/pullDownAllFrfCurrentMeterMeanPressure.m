@@ -9,6 +9,8 @@
 % load('pixelCloud_Processed_bigArea.mat');            % HR Pixel cloud
 % HRpixc = dataStruct;
 
+paths = setupPaths();
+
 load("2km_LR_L3_SSH_unsmoothed_Processed.mat");                                % SWOT dataStruct
 L3_250m=dataStruct;
 
