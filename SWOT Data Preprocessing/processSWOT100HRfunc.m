@@ -1,3 +1,5 @@
+paths = setupPaths();
+
 function [dataStruct]=processSWOT100HRfunc(inputPath)
     % processSWOTFiles Processes SWOT NetCDF files in the given directory
     % 
@@ -27,8 +29,8 @@ function [dataStruct]=processSWOT100HRfunc(inputPath)
     end
 
     % Load FRF water level sensor locations
-    % load('waterLevel_frfX.mat');
-    % load('waterLevel_frfY.mat');
+    % load(fullfile(paths.preprocessing, 'waterLevel_frfX.mat'));
+    % load(fullfile(paths.preprocessing, 'waterLevel_frfY.mat'));
     waterlevel_frfX=627.472; % Use this point so we don't get too close to pier
     waterlevel_frfY=504.707;
 
@@ -114,7 +116,7 @@ function [dataStruct]=processSWOT100HRfunc(inputPath)
     end
 
     % Save the structure to a MAT file
-    save(fullfile('D:\SWOT\Data\SWOTdata\frf_raster_HR_100m', '100m_Processed.mat'), 'dataStruct');
+    save(fullfile(paths.swot.hr100m, '100m_Processed.mat'), 'dataStruct');
 
     disp('Processing complete. Data saved.');
 end
