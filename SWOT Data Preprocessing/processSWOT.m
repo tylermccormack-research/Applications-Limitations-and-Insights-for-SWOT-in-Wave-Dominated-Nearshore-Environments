@@ -1,5 +1,7 @@
 %% 2km LR_L3_SSH_Expert
 % Define the file path
+paths = setupPaths();
+
 filePath = 'D:\SWOT\Data\SWOTdata\L3_LR_SSH_Expert\rawData';
 
 % L3 2km Spatial processing
