@@ -8,7 +8,7 @@ paths = setupPaths();
 
 clear; clc;
 
-outDir = "D:\SWOT\Data\FRF Hydro data\Barometer";
+outDir = "paths.frf.barometer";
 if ~isfolder(outDir), mkdir(outDir); end
 outMat = fullfile(outDir, "baroFRF_airPressure_raw_20230701_20250201.mat");
 
