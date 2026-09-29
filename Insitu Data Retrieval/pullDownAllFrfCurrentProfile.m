@@ -15,6 +15,8 @@
 % -----------------------
 % Load SWOT structure(s)
 % -----------------------
+paths = setupPaths();
+
 load('2km_LR_L3_SSH_unsmoothed_Processed.mat')
 L3_unsmoothed = dataStruct;
 
