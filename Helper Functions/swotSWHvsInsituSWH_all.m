@@ -2212,4 +2212,4 @@ axis tight;
 
 
 %% Save all variables 
-save('D:\SWOT\Analysis\Paper Analysis\SWH\swhAccuracyAnalysis.mat');
+save(fullfile(paths.paperSWH, 'swhAccuracyAnalysis.mat'));
