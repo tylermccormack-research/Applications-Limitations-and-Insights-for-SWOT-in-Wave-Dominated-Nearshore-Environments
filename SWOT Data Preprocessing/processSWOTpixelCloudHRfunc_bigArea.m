@@ -1,3 +1,5 @@
+paths = setupPaths();
+
 function [dataStruct]=processSWOTpixelCloudHRfunc_bigArea(inputPath)
     % processSWOTFiles Processes SWOT NetCDF files in the given directory
     % 
@@ -27,8 +29,8 @@ function [dataStruct]=processSWOTpixelCloudHRfunc_bigArea(inputPath)
     end
 
     % Load FRF water level sensor locations
-    % load('waterLevel_frfX.mat');
-    % load('waterLevel_frfY.mat');
+    % load(fullfile(paths.preprocessing, 'waterLevel_frfX.mat'));
+    % load(fullfile(paths.preprocessing, 'waterLevel_frfY.mat'));
     waterlevel_frfX=627.472; % Use this point so we don't get too close to pier
     waterlevel_frfY=504.707;
 
@@ -183,7 +185,7 @@ function [dataStruct]=processSWOTpixelCloudHRfunc_bigArea(inputPath)
     end
 
     % Save the structure to a MAT file
-    save(fullfile('D:\SWOT\Data\SWOTdata\frf_PointCloud', 'pixelCloud_Processed_bigArea.mat'), 'dataStruct');
+    save(fullfile(paths.swot.pixc, 'pixelCloud_Processed_bigArea.mat'), 'dataStruct');
 
     disp('Processing complete. Data saved.');
 end
