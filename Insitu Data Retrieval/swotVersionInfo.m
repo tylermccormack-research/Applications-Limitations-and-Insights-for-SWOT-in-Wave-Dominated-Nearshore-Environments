@@ -2,6 +2,8 @@
 % L3 LR
 
 % L2 LR
+paths = setupPaths();
+
 dataDir='D:\SWOT\Data\SWOTdata\frf_raster_LR_L2_250m\Expert';
 [~, ~, versionFlag_LR2km] = getSwotVersionInfo(dataDir, convertedTimeArray_250m_LR_L2_SSH_Expert);
 
