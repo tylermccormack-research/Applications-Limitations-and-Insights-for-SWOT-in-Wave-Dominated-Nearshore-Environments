@@ -1,3 +1,5 @@
+paths = setupPaths();
+
 function [dataStruct]=processSWOT250_L3_LR_SSH_expert_func(inputPath)
     % processSWOTFiles Processes SWOT NetCDF files in the given directory
     % 
@@ -22,9 +24,9 @@ function [dataStruct]=processSWOT250_L3_LR_SSH_expert_func(inputPath)
     end
 
     % Load FRF water level sensor locations
-    load('waterLevel_frfX.mat');
-    load('waterLevel_frfY.mat');
-    load('sensorCoords.mat');  % [numSensors x 2] (x,y)
+    load(fullfile(paths.preprocessing, 'waterLevel_frfX.mat'));
+    load(fullfile(paths.preprocessing, 'waterLevel_frfY.mat'));
+    load(fullfile(paths.static, 'sensorCoords.mat'));  % [numSensors x 2] (x,y)
 
     % Set maximum allowed distances for each sensor (meters)
     maxDistWaterLevel = 0;
@@ -161,7 +163,7 @@ function [dataStruct]=processSWOT250_L3_LR_SSH_expert_func(inputPath)
 
 
     % Save the structure to a MAT file
-    save(fullfile('D:\SWOT\Data\SWOTdata\L3_LR_SSH_Expert', ...
+    save(fullfile(paths.swot.l3Expert, ...
         '2km_LR_L3_SSH_expert_Processed.mat'), 'dataStruct');
 
     disp('Processing complete. Data saved.');
