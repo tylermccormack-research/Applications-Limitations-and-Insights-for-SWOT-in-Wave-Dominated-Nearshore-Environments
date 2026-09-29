@@ -1,5 +1,7 @@
 %% Pull down wave hourly average wave heights from all relevant insitu sensors
 % Load all SWOT structures
+paths = setupPaths();
+
 load('2km_LR_L3_SSH_expert_Processed.mat');          % L3 LR 2km
 L3_2km = dataStruct;
 load('250m_LR_L2_SSH_expert_Processed.mat'); % LR 2km
