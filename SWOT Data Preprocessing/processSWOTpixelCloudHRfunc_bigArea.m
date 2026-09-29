@@ -1,6 +1,6 @@
+function [dataStruct]=processSWOTpixelCloudHRfunc_bigArea(inputPath)
 paths = setupPaths();
 
-function [dataStruct]=processSWOTpixelCloudHRfunc_bigArea(inputPath)
     % processSWOTFiles Processes SWOT NetCDF files in the given directory
     % 
     % INPUT:
