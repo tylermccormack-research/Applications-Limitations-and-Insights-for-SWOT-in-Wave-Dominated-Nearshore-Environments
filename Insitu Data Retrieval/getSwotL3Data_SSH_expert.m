@@ -9,7 +9,7 @@ clear; clc;
 %% === USER SETTINGS ===
 baseCatalogURL = 'https://tds-odatis.aviso.altimetry.fr/thredds/catalog/dataset-l3-swot-karin-nadir-validated/l3_lr_ssh/v2_0_1/Expert/catalog.html';
 baseDataURL = 'https://tds-odatis.aviso.altimetry.fr/thredds/fileServer/dataset-l3-swot-karin-nadir-validated/l3_lr_ssh/v2_0_1/Expert';
-outputDir = 'D:\SWOT\Data\SWOTdata\L3_LR_SSH_Expert';
+outputDir = paths.swot.l3Expert;
 
 targetPasses = {'063', '354'};
 
