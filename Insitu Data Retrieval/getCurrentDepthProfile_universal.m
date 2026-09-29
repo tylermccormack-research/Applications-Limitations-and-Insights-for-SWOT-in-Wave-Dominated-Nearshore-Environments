@@ -1,3 +1,5 @@
+paths = setupPaths();
+
 function depthVec = getCurrentDepthProfile_universal(inst)
 % getCurrentDepthProfile_universal
 % Pulls the STATIC cell depth vector (NAVD88 elevation of bin centers) for an FRF current profiler
