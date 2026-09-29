@@ -1,3 +1,5 @@
+paths = setupPaths();
+
 load('currents26m_struct');
 
 %% === Step 1: Define fixed hourly time vector (NO SWOT DEPENDENCY)
@@ -12,9 +14,9 @@ fprintf('→ Building hourly SWH time series: %d timestamps\n', nTimes);
 
 loadedOK = false;
 
-if isfile('D:\SWOT\Analysis\Wave height estimation\waveVariables\Lookup\SWH_hourly_lookup.mat')
+if isfile(fullfile(paths.inSitu.lookup, 'SWH_hourly_lookup.mat'))
     try
-        load('D:\SWOT\Analysis\Wave height estimation\waveVariables\Lookup\SWH_hourly_lookup.mat', 'SWH_hourly');
+        load(fullfile(paths.inSitu.lookup, 'SWH_hourly_lookup.mat'), 'SWH_hourly');
         fprintf('✓ Loaded hourly lookup — skipping recomputation.\n');
         loadedOK = true;
     catch
@@ -84,7 +86,7 @@ if ~loadedOK
     SWH_hourly=struct('time',timeGrid, ...
                         'SWH', SWH_hourly);
 
-    save('D:\SWOT\Analysis\Wave height estimation\waveVariables\Lookup\SWH_hourly_lookup.mat', ...
+    save(fullfile(paths.inSitu.lookup, 'SWH_hourly_lookup.mat'), ...
         'SWH_hourly','timeGrid');
 
     fprintf('✓ Saved hourly SWH lookup\n');
