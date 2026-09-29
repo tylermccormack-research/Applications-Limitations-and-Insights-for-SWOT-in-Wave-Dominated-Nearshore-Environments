@@ -1,3 +1,5 @@
+paths = setupPaths();
+
 clear; clc
 
 %% =========================================================
@@ -5,34 +7,34 @@ clear; clc
 %  ---------------------------------------------------------
 %  SWOT SWH from LR2km product
 % =========================================================
-load('250m_LR_L2_SSH_expert_Processed.mat'); % LR 2km
+load(fullfile(paths.swot.l2LrExpert, '250m_LR_L2_SSH_expert_Processed.mat')); % LR 2km
 LR2km = dataStruct; 
 clearvars dataStruct
 
 % In-situ wave / env info (LR2km time base)
-load('insituSWH_relevantInstrumentsAllProducts.mat','instrumentSWH_byTime_LR2km');
-load('insituTp_relevantInstrumentsAllProducts.mat','instrumentTp_byTime_LR2km');
-load('insituWavePeakDir_relevantInstrumentsAllProducts.mat','instrumentWavePeakDir_byTime_LR2km')
-load('insituWaveMeanDir_relevantInstrumentsAllProducts.mat','instrumentWaveMeanDir_byTime_LR2km')
-load('insituCurrentSpeeds_relevantInstrumentsAllProducts.mat','instrumentCurrentSpeed_byTime_LR2km');
-load('insituCurrentDirection_relevantInstrumentsAllProducts.mat','instrumentCurrentDirection_byTime_LR2km');
-load('insituWindSpeeds_relevantInstrumentsAllProducts.mat','instrumentWindSpeed_byTime_LR2km');
-load('insituWindDirection_relevantInstrumentsAllProducts.mat','instrumentWindDirection_byTime_LR2km');
-load('waterDepth_relevantInstrumentsAllProducts.mat', 'instrumentWaterDepth_byTime_LR2km');
+load(fullfile(paths.inSitu.hs, 'insituSWH_relevantInstrumentsAllProducts.mat'),'instrumentSWH_byTime_LR2km');
+load(fullfile(paths.inSitu.tp, 'insituTp_relevantInstrumentsAllProducts.mat'),'instrumentTp_byTime_LR2km');
+load(fullfile(paths.inSitu.peakDirection, 'insituWavePeakDir_relevantInstrumentsAllProducts.mat'),'instrumentWavePeakDir_byTime_LR2km')
+load(fullfile(paths.inSitu.direction, 'insituWaveMeanDir_relevantInstrumentsAllProducts.mat'),'instrumentWaveMeanDir_byTime_LR2km')
+load(fullfile(paths.inSitu.currents, 'insituCurrentSpeeds_relevantInstrumentsAllProducts.mat'),'instrumentCurrentSpeed_byTime_LR2km');
+load(fullfile(paths.inSitu.currents, 'insituCurrentDirection_relevantInstrumentsAllProducts.mat'),'instrumentCurrentDirection_byTime_LR2km');
+load(fullfile(paths.inSitu.wind, 'insituWindSpeeds_relevantInstrumentsAllProducts.mat'),'instrumentWindSpeed_byTime_LR2km');
+load(fullfile(paths.inSitu.wind, 'insituWindDirection_relevantInstrumentsAllProducts.mat'),'instrumentWindDirection_byTime_LR2km');
+load(fullfile(paths.inSitu.waterDepth, 'waterDepth_relevantInstrumentsAllProducts.mat'), 'instrumentWaterDepth_byTime_LR2km');
 
 % Pass match (same logicals you used before)
-load("passMatchLogical.mat","idx063_LR2km","idx354_LR2km");
+load(fullfile(paths.static, 'passMatchLogical.mat'),"idx063_LR2km","idx354_LR2km");
 
 % Load tide gauge
-load('noaaTideData_all_navd88.mat');
+load(fullfile(paths.frf.waterLevel, 'noaaTideData_all_navd88.mat'));
 
 % Time and water level stuff
 % SWOT LR_L2_SSH_Expert_2km
-load('convertedTimeArray_250m_LR_L2_SSH_Expert.mat');
-load('extractedSSH_250m_LR_L2_SSH_Expert.mat');
+load(fullfile(paths.swot.l2LrExpert, 'convertedTimeArray_250m_LR_L2_SSH_Expert.mat'));
+load(fullfile(paths.swot.l2LrExpert, 'extractedSSH_250m_LR_L2_SSH_Expert.mat'));
 
 % --- DEM background ---
-load("demVariables.mat");
+load(fullfile(paths.static, 'demVariables.mat'));
 
 
 %% =========================================================
@@ -221,7 +223,7 @@ h2_600 = 6.7 + etaKeep';
 % h2_600 = ones(length(etaKeep),1)*6.7 ;
 
 % --- Apply shoaling ---
-load('insituWaveMeanDir_relevantInstrumentsAllProducts.mat','instrumentWaveMeanDir_byTime_LR2km');
+load(fullfile(paths.inSitu.direction, 'insituWaveMeanDir_relevantInstrumentsAllProducts.mat'),'instrumentWaveMeanDir_byTime_LR2km');
 theta1=deg2rad(instrumentWaveMeanDir_byTime_LR2km.waverider_17m);
 SWH_closestTo900mSensor = shoalSWH_linear( ...
     SWH_closestTo900mSensor, Tp_17,  h1_900, h2_900, theta1);
@@ -244,7 +246,7 @@ y900_shoal = nan(numPasses,1);
 x600_shoal = nan(numPasses,1);
 y600_shoal = nan(numPasses,1);
 
-load('sensorCoords.mat');
+load(fullfile(paths.static, 'sensorCoords.mat'));
 
 x900_shoal = repmat(sensorCoords(12,1), numPasses, 1);
 y900_shoal = repmat(sensorCoords(12,1), numPasses, 1);
@@ -512,8 +514,8 @@ hPier=fill([0 585 585 0],[514 514 520 520],'k','LineWidth',2);
 hGauges = plotFRFinstruments_instrumentsOnly_4SWOT_compare_locations;
 
 % --- Shoreline ---
-load("UsShapeFrfX.mat");
-load("UsShapeFrfY.mat");
+load(fullfile(paths.static, 'UsShapeFrfX.mat'));
+load(fullfile(paths.static, 'UsShapeFrfY.mat'));
 plot(UsShapeFrfX,UsShapeFrfY,'k-');
 
 % --- Load SWOT SWH comparison locations ---
