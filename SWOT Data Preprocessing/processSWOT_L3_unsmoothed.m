@@ -1,3 +1,5 @@
+paths = setupPaths();
+
 function [dataStruct]=processSWOT_L3_unsmoothed(inputPath)
     % processSWOTFiles Processes SWOT NetCDF files in the given directory
     % 
@@ -22,9 +24,9 @@ function [dataStruct]=processSWOT_L3_unsmoothed(inputPath)
     end
 
     % Load FRF water level sensor locations
-    load('waterLevel_frfX.mat');
-    load('waterLevel_frfY.mat');
-    load('sensorCoords.mat');  % [numSensors x 2] (x,y)
+    load(fullfile(paths.preprocessing, 'waterLevel_frfX.mat'));
+    load(fullfile(paths.preprocessing, 'waterLevel_frfY.mat'));
+    load(fullfile(paths.static, 'sensorCoords.mat'));  % [numSensors x 2] (x,y)
 
     % Set maximum allowed distances for each sensor (meters)
     maxDistWaterLevel = 0;
@@ -113,44 +115,34 @@ function [dataStruct]=processSWOT_L3_unsmoothed(inputPath)
         maxDistWaverider17m= 500;
         maxDistWaverider26m= 500;
 
-        load("sensorCoords_currents.mat");
+        load(fullfile(paths.static, 'sensorCoords_currents.mat'));
 
-        % Sig940_300
-        % distances2buoy = abs(frfX - sensorCoords_currents.X(1));
-         distances2buoy = sqrt((frfX - sensorCoords_currents.X(1)).^2 + (frfY - sensorCoords_currents.Y(1)).^2);
+        % Sig940_300         distances2buoy = sqrt((frfX - sensorCoords_currents.X(1)).^2 + (frfY - sensorCoords_currents.Y(1)).^2);
         [minDistToSig940_300, minDistToSig940_300_idx] = min(distances2buoy);
         if minDistToSig940_300 > maxDistSig940_300
             minDistToSig940_300 = 0; %NaN;
         end
 
-        % Sig940_400
-        % distances2buoy = abs(frfX - sensorCoords_currents.X(2));
-        distances2buoy = sqrt((frfX - sensorCoords_currents.X(2)).^2 + (frfY - sensorCoords_currents.Y(2)).^2);
+        % Sig940_400        distances2buoy = sqrt((frfX - sensorCoords_currents.X(2)).^2 + (frfY - sensorCoords_currents.Y(2)).^2);
         [minDistToSig940_400, minDistToSig940_400_idx] = min(distances2buoy);
         if minDistToSig940_400 > maxDistSig940_400
             minDistToSig940_400 = 0; %NaN;
         end
 
-                % AWAC- 4.5m  (~400m)
-        % distances2buoy = abs(frfX - sensorCoords_currents.X(3));
-        distances2buoy = sqrt((frfX - sensorCoords_currents.X(3)).^2 + (frfY - sensorCoords_currents.Y(3)).^2);        
+                % AWAC- 4.5m  (~400m)        distances2buoy = sqrt((frfX - sensorCoords_currents.X(3)).^2 + (frfY - sensorCoords_currents.Y(3)).^2);        
         [minDistToAwac4p5, minDistToAwac4p5_idx] = min(distances2buoy);
         if minDistToAwac4p5 > maxDistAwac4p5
             minDistToAwac4p5 = 0; %NaN;
         end
 
-        % Sig940_600
-        % distances2buoy = abs(frfX - sensorCoords_currents.X(4));
-        distances2buoy = sqrt((frfX - sensorCoords_currents.X(4)).^2 + (frfY - sensorCoords_currents.Y(4)).^2);     
+        % Sig940_600        distances2buoy = sqrt((frfX - sensorCoords_currents.X(4)).^2 + (frfY - sensorCoords_currents.Y(4)).^2);     
         [minDistToSig940_600, minDistToSig940_600_idx] = min(distances2buoy);
         if minDistToSig940_600 > maxDistSig940_600
             minDistToSig940_600 = 0; %NaN;
         end
 
 
-        % AWAC 11m (~1300m)
-         % distances2buoy = abs(frfX - sensorCoords_currents.X(5));
-         distances2buoy = sqrt((frfX - sensorCoords_currents.X(5)).^2 + (frfY - sensorCoords_currents.Y(5)).^2);
+        % AWAC 11m (~1300m)         distances2buoy = sqrt((frfX - sensorCoords_currents.X(5)).^2 + (frfY - sensorCoords_currents.Y(5)).^2);
         [minDistToAwac11, minDistToAwac11_idx] = min(distances2buoy);
         if minDistToAwac11 > maxDistAwac11
             minDistToAwac11 = 0; %NaN;
@@ -205,7 +197,7 @@ function [dataStruct]=processSWOT_L3_unsmoothed(inputPath)
 
 
     % Save the structure to a MAT file
-    save(fullfile('D:\SWOT\Data\SWOTdata\L3_LR_SSH_Unsmoothed', ...
+    save(fullfile(paths.swot.l3Unsmooth, ...
         '2km_LR_L3_SSH_unsmoothed_Processed.mat'), 'dataStruct');
 
     disp('Processing complete. Data saved.');
