@@ -1,3 +1,5 @@
+paths = setupPaths();
+
 clear; clc
 
 %% Averaging settings
@@ -13,25 +15,25 @@ b_pixc = 500;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Load FRF water level data
-% load('noaaTideData_all.mat');
-load('noaaTideData_all_navd88.mat');
+% load(fullfile(paths.frf.waterLevel, 'noaaTideData_all.mat'));
+load(fullfile(paths.frf.waterLevel, 'noaaTideData_all_navd88.mat'));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Load SWOT data
 % SWOT LR_L3_SSH_Expert_2km 
-load('convertedTimeArray_L3_LR_SSH_2km.mat');
-load('extractedSSH_L3_LR_SSH_2km.mat');
+load(fullfile(paths.swot.l3Expert, 'convertedTimeArray_L3_LR_SSH_2km.mat'));
+load(fullfile(paths.swot.l3Expert, 'extractedSSH_L3_LR_SSH_2km.mat'));
 
 % SWOT LR_L2_SSH_Expert_2km
-load('convertedTimeArray_250m_LR_L2_SSH_Expert.mat');
-load('extractedSSH_250m_LR_L2_SSH_Expert.mat');
+load(fullfile(paths.swot.l2LrExpert, 'convertedTimeArray_250m_LR_L2_SSH_Expert.mat'));
+load(fullfile(paths.swot.l2LrExpert, 'extractedSSH_250m_LR_L2_SSH_Expert.mat'));
 
 % SWOT HR_L2_Raster_100m
-% load("extractedSWE_100HR.mat");
-load("convertedTimeArray_100HR.mat");
+% load(fullfile(paths.swot.hr100m, 'extractedSWE_100HR.mat'));
+load(fullfile(paths.swot.hr100m, 'convertedTimeArray_100HR.mat'));
 
 % --- Compute spatially averaged SWE for HR 100m ---
-load('100m_Processed.mat')
+load(fullfile(paths.swot.hr100m, '100m_Processed.mat'))
 fieldNames = fieldnames(dataStruct);
 numPasses = numel(fieldNames);
 
@@ -67,11 +69,11 @@ for t = 1:numPasses
 end
 
 % SWOT HR_L2_Pixel Cloud
-% load("extractedSWE_pixelCloudHR_bigArea.mat");
-load("convertedTimeArray_pixelCloudHR_bigArea.mat");
+% load(fullfile(paths.swot.pixc, 'extractedSWE_pixelCloudHR_bigArea.mat'));
+load(fullfile(paths.swot.pixc, 'convertedTimeArray_pixelCloudHR_bigArea.mat'));
 
 % --- Compute spatially averaged SWE for Pixel Cloud ---
-load('pixelCloud_Processed_bigArea.mat')
+load(fullfile(paths.swot.pixc, 'pixelCloud_Processed_bigArea.mat'))
 fieldNames = fieldnames(dataStruct);
 numPasses = numel(fieldNames);
 
@@ -99,13 +101,13 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Load Processed SWOT data
-load('2km_LR_L3_SSH_expert_Processed.mat');          % L3 2km
+load(fullfile(paths.swot.l3Expert, '2km_LR_L3_SSH_expert_Processed.mat'));          % L3 2km
 L3_2km = dataStruct;
-load('250m_LR_L2_SSH_expert_Processed.mat'); % LR 2km
+load(fullfile(paths.swot.l2LrExpert, '250m_LR_L2_SSH_expert_Processed.mat')); % LR 2km
 LR2km = dataStruct;
-load('100m_Processed.mat');                  % HR 100m
+load(fullfile(paths.swot.hr100m, '100m_Processed.mat'));                  % HR 100m
 HR100m = dataStruct;
-load('pixelCloud_Processed_bigArea.mat');            % HR Pixel cloud
+load(fullfile(paths.swot.pixc, 'pixelCloud_Processed_bigArea.mat'));            % HR Pixel cloud
 HRpixc = dataStruct;
 clear vars- dataStruct
 
@@ -235,14 +237,14 @@ nrmse_pix    = rmse(insitu_pix,    extractedSWE_pixelCloudHR_avg) / range_pix;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Load Wave, Current, Wind info
-load('insituSWH_relevantInstrumentsAllProducts.mat');
-load('insituTp_relevantInstrumentsAllProducts.mat');
-load('insituWavePeakDir_relevantInstrumentsAllProducts.mat')
-load('insituWaveMeanDir_relevantInstrumentsAllProducts.mat')
-load('insituCurrentSpeeds_relevantInstrumentsAllProducts.mat');
-load('insituCurrentDirection_relevantInstrumentsAllProducts.mat');
-load('insituWindSpeeds_relevantInstrumentsAllProducts.mat');
-load('insituWindDirection_relevantInstrumentsAllProducts.mat');
+load(fullfile(paths.inSitu.hs, 'insituSWH_relevantInstrumentsAllProducts.mat'));
+load(fullfile(paths.inSitu.tp, 'insituTp_relevantInstrumentsAllProducts.mat'));
+load(fullfile(paths.inSitu.peakDirection, 'insituWavePeakDir_relevantInstrumentsAllProducts.mat'))
+load(fullfile(paths.inSitu.direction, 'insituWaveMeanDir_relevantInstrumentsAllProducts.mat'))
+load(fullfile(paths.inSitu.currents, 'insituCurrentSpeeds_relevantInstrumentsAllProducts.mat'));
+load(fullfile(paths.inSitu.currents, 'insituCurrentDirection_relevantInstrumentsAllProducts.mat'));
+load(fullfile(paths.inSitu.wind, 'insituWindSpeeds_relevantInstrumentsAllProducts.mat'));
+load(fullfile(paths.inSitu.wind, 'insituWindDirection_relevantInstrumentsAllProducts.mat'));
 
 %% Plot scatter plots and include comparison locations
 scr = get(0,'ScreenSize');
@@ -380,7 +382,7 @@ set(axMap,'Box','on', ...
           'Layer','top', ...
           'LineWidth',1.5);
 
-load("demVariables.mat");
+load(fullfile(paths.static, 'demVariables.mat'));
 
 levelsFill = -0.25:-0.5:-35;
 levelsLine = -5:-5:-35;
@@ -414,8 +416,8 @@ plot(noaaX,noaaY,'ob','MarkerFaceColor','b','LineWidth',3, MarkerSize=20);
 
 
 % Shoreline
-load("UsShapeFrfX.mat");
-load("UsShapeFrfY.mat");
+load(fullfile(paths.static, 'UsShapeFrfX.mat'));
+load(fullfile(paths.static, 'UsShapeFrfY.mat'));
 plot(UsShapeFrfX,UsShapeFrfY,'k-');
 
 % --- SWOT points (reuse your loops exactly as-is) ---
@@ -425,7 +427,7 @@ scatter(NaN,NaN,100,'y',"filled")
 
 % L2
 clearvars fieldNames numPasses t fieldName WLI x y
-load('250m_LR_L2_SSH_expert_Processed.mat')
+load(fullfile(paths.swot.l2LrExpert, '250m_LR_L2_SSH_expert_Processed.mat'))
 fieldNames = fieldnames(dataStruct);
 numPasses = numel(fieldNames);
 for t = 1:numPasses
@@ -444,7 +446,7 @@ scatter(NaN, NaN,600,'r+', 'LineWidth', 3)
 
 % Pixel Cloud
 clearvars fieldNames numPasses t fieldName WLI x y
-load('pixelCloud_Processed_bigArea.mat')
+load(fullfile(paths.swot.pixc, 'pixelCloud_Processed_bigArea.mat'))
 fieldNames = fieldnames(dataStruct);
 numPasses = numel(fieldNames);
 for t = 1:numPasses
@@ -461,7 +463,7 @@ end
 
 % HR 100 m
 clearvars fieldNames numPasses t fieldName WLI x y
-load('100m_Processed.mat')
+load(fullfile(paths.swot.hr100m, '100m_Processed.mat'))
 fieldNames = fieldnames(dataStruct);
 numPasses = numel(fieldNames);
 for t = 1:numPasses
@@ -476,7 +478,7 @@ end
 % plotPointsWithCounts100m(axMap, x, y, {600,'r+','LineWidth',3}, 'r')
 
 % L3
-load('2km_LR_L3_SSH_expert_Processed.mat');          % L3 2km
+load(fullfile(paths.swot.l3Expert, '2km_LR_L3_SSH_expert_Processed.mat'));          % L3 2km
 fieldNames = fieldnames(dataStruct);
 numPasses = numel(fieldNames);
 for t = 1:numPasses
