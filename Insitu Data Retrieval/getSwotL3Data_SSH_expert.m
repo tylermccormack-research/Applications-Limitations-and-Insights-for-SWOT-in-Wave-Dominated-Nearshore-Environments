@@ -2,6 +2,8 @@
 % Downloads SWOT L3 LR SSH Expert NetCDF files for passes 063 and 354
 % across all available cycles from the AVISO THREDDS catalog.
 
+paths = setupPaths();
+
 clear; clc;
 
 %% === USER SETTINGS ===
