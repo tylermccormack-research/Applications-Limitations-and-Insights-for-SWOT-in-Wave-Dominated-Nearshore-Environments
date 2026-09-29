@@ -1,3 +1,5 @@
+paths = setupPaths();
+
 function [out, timeNearest, idxNearest] = getCurrentProfile_universal(meanTimes, instrument, variables)
 % getCurrentProfile_universal
 %
