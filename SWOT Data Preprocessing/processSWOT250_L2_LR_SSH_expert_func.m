@@ -1,3 +1,5 @@
+paths = setupPaths();
+
 function [dataStruct]=processSWOT250_L2_LR_SSH_expert_func(inputPath)
     % processSWOTFiles Processes SWOT NetCDF files in the given directory
     % 
@@ -22,9 +24,9 @@ function [dataStruct]=processSWOT250_L2_LR_SSH_expert_func(inputPath)
     end
 
     % Load FRF water level sensor locations
-    load('waterLevel_frfX.mat');
-    load('waterLevel_frfY.mat');
-    load('sensorCoords.mat');  % [numSensors x 2] (x,y)
+    load(fullfile(paths.preprocessing, 'waterLevel_frfX.mat'));
+    load(fullfile(paths.preprocessing, 'waterLevel_frfY.mat'));
+    load(fullfile(paths.static, 'sensorCoords.mat'));  % [numSensors x 2] (x,y)
 
     % Set maximum allowed distances for each sensor (meters)
     % maxDistWaterLevel = 15000;
@@ -182,33 +184,25 @@ function [dataStruct]=processSWOT250_L2_LR_SSH_expert_func(inputPath)
         % end
 
         % % Uses point closest to x coordinate
-        % % 17m buoy
-        % distances2buoy = abs(frfX - sensorCoords(13,1));
-        % [minDistTo17mBuoy, minDistTo17mBuoy_idx] = min(distances2buoy);
+        % % 17m buoy        % [minDistTo17mBuoy, minDistTo17mBuoy_idx] = min(distances2buoy);
         % if minDistTo17mBuoy > maxDist17mBuoy
         %     % minDistTo17mBuoy_idx = NaN;
         %     minDistTo17mBuoy = 0; %NaN;
         % end
         % 
-        % % 600m sensor
-        % distancesTo600mSensor = abs(frfX - sensorCoords(11,1));
-        % [minDistTo600mSensor, minDistTo600mSensor_idx] = min(distancesTo600mSensor);
+        % % 600m sensor        % [minDistTo600mSensor, minDistTo600mSensor_idx] = min(distancesTo600mSensor);
         % if minDistTo600mSensor > maxDist600mSensor
         %     % minDistTo600mSensor_idx = NaN;
         %     minDistTo600mSensor = 0;% NaN;
         % end
         % 
-        % % 26m buoy
-        % distancesTo26mBuoy = abs(frfX - sensorCoords(14,1));
-        % [minDistTo26mBuoy, minDistTo26mBuoy_idx] = min(distancesTo26mBuoy);
+        % % 26m buoy        % [minDistTo26mBuoy, minDistTo26mBuoy_idx] = min(distancesTo26mBuoy);
         % if minDistTo26mBuoy > maxDist26mBuoy
         %     % minDistTo26mBuoy_idx = NaN;
         %     minDistTo26mBuoy = 0; % NaN;
         % end
         % 
-        % % 900m sensor
-        % distancesTo900mSensor = abs(frfX - sensorCoords(12,1));
-        % [minDistTo900mSensor, minDistTo900mSensor_idx] = min(distancesTo900mSensor);
+        % % 900m sensor        % [minDistTo900mSensor, minDistTo900mSensor_idx] = min(distancesTo900mSensor);
         % if minDistTo900mSensor > maxDist900mSensor
         %     % minDistTo600mSensor_idx = NaN;
         %     minDistTo900mSensor = 0;% NaN;
@@ -248,7 +242,7 @@ function [dataStruct]=processSWOT250_L2_LR_SSH_expert_func(inputPath)
     dataStruct = removeEmptyFieldsFromStruct(dataStruct);
 
     % Save the structure to a MAT file
-    save(fullfile('D:\SWOT\Data\SWOTdata\frf_raster_LR_L2_250m', ...
+    save(fullfile(paths.swot.l2LrExpert, ...
         '250m_LR_L2_SSH_expert_Processed.mat'), 'dataStruct');
 
     disp('Processing complete. Data saved.');
