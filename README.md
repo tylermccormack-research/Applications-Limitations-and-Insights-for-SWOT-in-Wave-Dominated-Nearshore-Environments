@@ -92,6 +92,24 @@ Because several in-situ retrieval scripts use the processed SWOT products to est
 
 Therefore the repository is **code-and-intermediate-data complete for reproducing the published analysis workflow**. Reproduction still requires access to the external/raw SWOT and FRF data sources described above, and the hard-coded local paths in the MATLAB scripts must be updated for the user's machine.
 
+## First-time setup
+
+Before running the MATLAB workflow:
+
+1. Open `setupPaths.m`.
+2. Change only:
+   ```matlab
+   paths.root = 'PATH_TO_YOUR_SWOT_DATA_ROOT';
+   ```
+   to the root directory containing the repository's `Data` and `Analysis` folders.
+3. Add the repository and its subfolders to the MATLAB path:
+   ```matlab
+   addpath(genpath('PATH_TO_THIS_REPOSITORY'));
+   ```
+4. Run the scripts in the execution order below.
+
+All repository scripts use `setupPaths.m` for local data/output paths. No machine-specific `D:\SWOT\...` paths are required.
+
 ## Execution chain
 
 ### 1. Download the SWOT data
