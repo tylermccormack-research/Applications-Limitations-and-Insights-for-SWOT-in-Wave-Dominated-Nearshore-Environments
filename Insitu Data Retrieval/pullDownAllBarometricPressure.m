@@ -4,6 +4,8 @@
 %  Fix: force UTC timezone for *all* datetime arrays
 % ========================================================================
 
+paths = setupPaths();
+
 clear; clc;
 
 outDir = "D:\SWOT\Data\FRF Hydro data\Barometer";
