@@ -1,6 +1,6 @@
+function [dataStruct]=processSWOT_L3_unsmoothed(inputPath)
 paths = setupPaths();
 
-function [dataStruct]=processSWOT_L3_unsmoothed(inputPath)
     % processSWOTFiles Processes SWOT NetCDF files in the given directory
     % 
     % INPUT:
