@@ -1,6 +1,6 @@
+function [dataStruct]=processSWOT250_L3_LR_SSH_expert_func(inputPath)
 paths = setupPaths();
 
-function [dataStruct]=processSWOT250_L3_LR_SSH_expert_func(inputPath)
     % processSWOTFiles Processes SWOT NetCDF files in the given directory
     % 
     % INPUT:
