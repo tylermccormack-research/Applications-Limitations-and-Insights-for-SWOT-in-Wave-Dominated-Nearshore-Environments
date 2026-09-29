@@ -1,8 +1,10 @@
 %% === Fill AWAC-4.5m NaNs using sig940-400 from THREDDS ===
+paths = setupPaths();
+
 clear; clc;
 
 load('timeVec.mat');
-filePath = 'D:\SWOT\Analysis\Wave height estimation\waveVariables\Hs\insituSWH_relevantInstrumentsAllProducts.mat';
+filePath = fullfile(paths.inSitu.hs, 'insituSWH_relevantInstrumentsAllProducts.mat');
 
 S = load(filePath);
 
