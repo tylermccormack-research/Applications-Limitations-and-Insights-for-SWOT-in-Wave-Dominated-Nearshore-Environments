@@ -36,9 +36,9 @@ fprintf('→ Found %d unique rounded SWOT overpass times across all datasets.\n'
 % --- CHECK FOR SAVED LOOKUP FIRST ---
 loadedOK = false;
 
-if isfile('D:\SWOT\Analysis\Wave height estimation\waveVariables\Lookup\waveDir_lookup.mat')
+if isfile(fullfile(paths.inSitu.lookup, 'waveDir_lookup.mat'))
     try
-        load('D:\SWOT\Analysis\Wave height estimation\waveVariables\Lookup\waveDir_lookup.mat', 'waveDir_lookup');
+        load(fullfile(paths.inSitu.lookup, 'waveDir_lookup.mat'), 'waveDir_lookup');
         fprintf('✓ Loaded waveDir_lookup.mat — skipping Wave Direction retrieval.\n');
         loadedOK = true;
     catch
@@ -104,7 +104,7 @@ if ~loadedOK
     end
 
     fprintf('✓ Parallel Wave Direction retrieval complete.\n');
-    save('D:\SWOT\Analysis\Wave height estimation\waveVariables\Lookup\waveDir_lookup.mat', 'waveDir_lookup');
+    save(fullfile(paths.inSitu.lookup, 'waveDir_lookup.mat'), 'waveDir_lookup');
     fprintf('✓ Saved waveDir_lookup.mat\n');
 end
 
@@ -175,7 +175,7 @@ function out = replaceNeg999(x)
 end
 
 %% Save full output
-save('D:\SWOT\Analysis\Wave height estimation\waveVariables\PeakDirection\insituWavePeakDir_relevantInstrumentsAllProducts.mat',"instrumentWavePeakDir_byTime_L3_2km", "instrumentWavePeakDir_byTime_LR2km", "instrumentWavePeakDir_byTime_HR100m", "instrumentWavePeakDir_byTime_HRpixc")
+save(fullfile(paths.inSitu.peakDirection, 'insituWavePeakDir_relevantInstrumentsAllProducts.mat'),"instrumentWavePeakDir_byTime_L3_2km", "instrumentWavePeakDir_byTime_LR2km", "instrumentWavePeakDir_byTime_HR100m", "instrumentWavePeakDir_byTime_HRpixc")
 
 %% Save Time vecs
 % save('D:\SWOT\Analysis\Wave height estimation\waveVariables\insituTimeVec_swotMatches_allProducts.mat',"timeVec_LR250m", "timeVec_LR2km", "timeVec_HR100m", "timeVec_HRpixc")
@@ -184,4 +184,4 @@ save('D:\SWOT\Analysis\Wave height estimation\waveVariables\PeakDirection\insitu
 % load('instrumentNames.mat');
 % instrumentNames(1:5)=[];
 % instrumentNamesSWH_new=instrumentNames;
-% save('D:\SWOT\Analysis\Wave height estimation\waveVariables\Hs\instrumentNamesSWH_new.mat',"instrumentNames")
+% save(fullfile(paths.inSitu.hs, 'instrumentNamesSWH_new.mat'),"instrumentNames")
