@@ -9,6 +9,8 @@
 % load('pixelCloud_Processed_bigArea.mat');            % HR Pixel cloud
 % HRpixc = dataStruct;
 
+paths = setupPaths();
+
 load("2km_LR_L3_SSH_unsmoothed_Processed.mat");                                % SWOT dataStruct
 L3_250m=dataStruct;
 
@@ -37,9 +39,9 @@ fprintf('→ Found %d unique rounded SWOT overpass times across all datasets.\n'
 % --- CHECK FOR SAVED LOOKUP FIRST ---
 loadedOK = false;
 
-if isfile('D:\SWOT\Analysis\Wave height estimation\waveVariables\Lookup\tp_lookup.mat')
+if isfile(fullfile(paths.inSitu.lookup, 'tp_lookup.mat'))
     try
-        load('D:\SWOT\Analysis\Wave height estimation\waveVariables\Lookup\tp_lookup.mat', 'tp_lookup');
+        load(fullfile(paths.inSitu.lookup, 'tp_lookup.mat'), 'tp_lookup');
         fprintf('✓ Loaded tp_lookup.mat — skipping Tp retrieval.\n');
         loadedOK = true;
     catch
@@ -102,7 +104,7 @@ for i = 1:numel(instrumentList)
 end
 
     fprintf('✓ Parallel Tp retrieval complete.\n');
-    save('D:\SWOT\Analysis\Wave height estimation\waveVariables\Lookup\tp_lookup.mat', 'tp_lookup');
+    save(fullfile(paths.inSitu.lookup, 'tp_lookup.mat'), 'tp_lookup');
     fprintf('✓ Saved tp_lookup.mat\n');
 end
 
@@ -151,12 +153,12 @@ end
 instrumentTp_byTime_L3_250m=struct2table(instrumentTp_byTime_L3_250m);
 
 %% Save full output
-save('D:\SWOT\Analysis\Wave height estimation\waveVariables\Tp\insituTp_relevantInstrumentsAllProducts_L3.mat',"instrumentTp_byTime_L3_250m")
+save(fullfile(paths.inSitu.tp, 'insituTp_relevantInstrumentsAllProducts_L3.mat'),"instrumentTp_byTime_L3_250m")
 
 %% Instrument Names
 % load('instrumentNames.mat');
 % instrumentNames(1:5)=[];
 % instrumentNamesSWH_new=instrumentNames;
-% save('D:\SWOT\Analysis\Wave height estimation\waveVariables\Hs\instrumentNamesSWH_new.mat',"instrumentNames")
+% save(fullfile(paths.inSitu.hs, 'instrumentNamesSWH_new.mat'),"instrumentNames")
 
 % save('D:\SWOT\Analysis\Wave height estimation\waveVariables\insituTimeVec_swotMatches_allProducts.mat',"timeVec_LR250m", "timeVec_LR2km", "timeVec_HR100m", "timeVec_HRpixc")
